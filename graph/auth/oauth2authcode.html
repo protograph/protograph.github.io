@@ -20,40 +20,42 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <style>
+        body {
+            /*margin-top: 50px;*/
+            /*margin-bottom: 50px;*/
+            background: none;
+        }
 
-    body {
-    	margin-top: 50px;
-    	margin-bottom: 50px;
-    	background: none;
-    }
-
-    .full {
-      /*background: url(http://placehold.it/1920x1080) no-repeat center center fixed;*/
-      background-color: #DCDCDC;
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
-    }
-
+        .full {
+            background-color: #DCDCDC;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
     </style>
+
+    <!-- <link rel="stylesheet" href="web/viewer.css"> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.6.483/pdf.min.js" integrity="sha256-I4QyfVeENfANZxc+zlTMpMqwhD9IerE5hd7ZoyG8J9w=" crossorigin="anonymous"></script>
+
+
 
 
 </head>
 
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
                 <a class="navbar-brand" href="https://protograph.github.io">Protograph</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -63,11 +65,11 @@
                         <a href="https://github.com/protograph/protograph">Source Code</a>
                     </li>
                     <!-- <li>
-                        <a href="#">Services</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact</a>
-                    </li> -->
+                      <a href="#">Services</a>
+                  </li>
+                  <li>
+                      <a href="#">Contact</a>
+                  </li> -->
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -75,33 +77,49 @@
         <!-- /.container -->
     </nav>
 
-    <!-- Page Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <h1>Protograph</h1>
-                <p>Protograph is a collection of graphic representation of various protocols.</p>
 
-                <h3>Authorization Protocols</h3>
-                <ul>
-                    <li><a href="graph/auth/oauth2authcode.html">OAuth2 Authorization Code Mode</a></li>
-                </ul>
+    <canvas id="the-canvas"></canvas>
 
-                <h3>Cryptographic Protocols</h3>
-                <ul>
-                    <li><a href="#">Diffie-Hellman Key Exchange</a></li>
-                </ul>
-
-            </div>
-        </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.container -->
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <script id="script">
+        var url = 'https://raw.githubusercontent.com/protograph/protograph/master/tex/oauth2.authcode.pdf';
+        PDFJS.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.6.483/pdf.worker.min.js';
+        PDFJS.disableTextLayer = false; // ???
+
+        PDFJS.getDocument(url).then(function getPDF(pdf) {
+            //
+            // Fetch the first page
+            //
+            pdf.getPage(1).then(function getPDF(page) {
+                var scale = 5;
+                var viewport = page.getViewport(scale);
+                //
+                // Prepare canvas using PDF page dimensions
+                //
+                var canvas = document.getElementById('the-canvas');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                canvas.style.width = '100%'
+
+                //
+                // Render PDF page into canvas context
+                //
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        });
+    </script>
+
 
 
 </body>
