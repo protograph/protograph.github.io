@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html class="full" lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script>
+        var url = 'https://raw.githubusercontent.com/protograph/protograph/master/tex/oauth2.pkce.pdf';
+    </script>
+
+    <title>Protograph</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <style>
+        body {
+            /*margin-top: 50px;*/
+            margin-bottom: 50px;
+            background: none;
+        }
+
+        .full {
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.6.483/pdf.min.js" integrity="sha256-I4QyfVeENfANZxc+zlTMpMqwhD9IerE5hd7ZoyG8J9w=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+                <a class="navbar-brand" href="https://protograph.github.io">Protograph</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                  <li>
+                      <a href="https://github.com/protograph/protograph/tree/master/yaml/oauth2.pkce.yaml">YAML</a>
+                  </li>
+                  <li>
+                      <a href="https://github.com/protograph/protograph/tree/master/tex/oauth2.pkce.pdf">PDF</a>
+                  </li>
+                  <li>
+                      <a href="https://github.com/protograph/protograph/issues">Support</a>
+                  </li>
+                  <li>
+                      <a href="https://github.com/protograph/protograph">Contributing</a>
+                  </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <h1>OAuth2: PKCE (Pixy)</h1>
+            Reference: <a href="https://tools.ietf.org/html/rfc7636">RFC 7636 - Proof Key for Code Exchange by OAuth Public Clients</a>
+        </div>
+
+        <hr>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+
+    <!-- canvas to draw PDF -->
+    <canvas id="the-canvas" class="center-block"></canvas>
+
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <script id="script">
+        PDFJS.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.6.483/pdf.worker.min.js';
+        PDFJS.disableTextLayer = false; // ???
+
+        PDFJS.getDocument(url).then(function getPDF(pdf) {
+            //
+            // Fetch the first page
+            //
+            pdf.getPage(1).then(function getPDF(page) {
+                var scale = 5;
+                var viewport = page.getViewport(scale);
+                //
+                // Prepare canvas using PDF page dimensions
+                //
+                var canvas = document.getElementById('the-canvas');
+                var context = canvas.getContext('2d');
+
+                // viewport is too large?
+                if (canvas.width * scale * 2 < viewport.width) {
+                    // viewport is too large!
+                    canvas.style.width = '95%'
+                } else {
+                    // viewport is small.
+                    canvas.style.width = '40%'
+                }
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                //
+                // Render PDF page into canvas context
+                //
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                page.render(renderContext);
+            });
+        });
+
+    </script>
+</body>
+
+</html>
