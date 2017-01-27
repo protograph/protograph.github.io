@@ -9,43 +9,33 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <script>
+        var url = 'https://raw.githubusercontent.com/protograph/protograph/master/tex/oauth2.authcode.pdf';
+    </script>
+
     <title>Protograph</title>
 
-    <!-- Bootstrap Core CSS -->
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"> -->
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
     <style>
         body {
             /*margin-top: 50px;*/
-            /*margin-bottom: 50px;*/
+            margin-bottom: 50px;
             background: none;
         }
 
         .full {
-            background-color: #DCDCDC;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
             background-size: cover;
         }
     </style>
-
-    <!-- <link rel="stylesheet" href="web/viewer.css"> -->
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.6.483/pdf.min.js" integrity="sha256-I4QyfVeENfANZxc+zlTMpMqwhD9IerE5hd7ZoyG8J9w=" crossorigin="anonymous"></script>
-
-
-
-
 </head>
 
 <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -61,15 +51,18 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="https://github.com/protograph/protograph">Source Code</a>
-                    </li>
-                    <!-- <li>
-                      <a href="#">Services</a>
+                  <li>
+                      <a href="https://github.com/protograph/protograph/tree/master/yaml/oauth2.authcode.yaml">YAML</a>
                   </li>
                   <li>
-                      <a href="#">Contact</a>
-                  </li> -->
+                      <a href="https://github.com/protograph/protograph/tree/master/tex/oauth2.authcode.pdf">PDF</a>
+                  </li>
+                  <li>
+                      <a href="https://github.com/protograph/protograph/issues">Support</a>
+                  </li>
+                  <li>
+                      <a href="https://github.com/protograph/protograph">Contributing</a>
+                  </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -77,9 +70,19 @@
         <!-- /.container -->
     </nav>
 
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <h1>OAuth2 Authorization Code Mode</h1> Reference: <a href="https://tools.ietf.org/html/rfc6749">RFC 6749: The OAuth 2.0 Authorization Framework</a>
+        </div>
 
-    <canvas id="the-canvas"></canvas>
+        <hr>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
 
+    <!-- canvas to draw PDF -->
+    <canvas id="the-canvas" class="center-block"></canvas>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
@@ -87,7 +90,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 
     <script id="script">
-        var url = 'https://raw.githubusercontent.com/protograph/protograph/master/tex/oauth2.authcode.pdf';
         PDFJS.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.6.483/pdf.worker.min.js';
         PDFJS.disableTextLayer = false; // ???
 
@@ -103,10 +105,17 @@
                 //
                 var canvas = document.getElementById('the-canvas');
                 var context = canvas.getContext('2d');
+
+                // viewport is too large?
+                if (canvas.width * scale * 2 < viewport.width) {
+                    // viewport is too large!
+                    canvas.style.width = '95%'
+                } else {
+                    // viewport is small.
+                    canvas.style.width = '40%'
+                }
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
-
-                canvas.style.width = '100%'
 
                 //
                 // Render PDF page into canvas context
@@ -118,10 +127,8 @@
                 page.render(renderContext);
             });
         });
+
     </script>
-
-
-
 </body>
 
 </html>
